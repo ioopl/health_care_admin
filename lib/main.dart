@@ -80,7 +80,10 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 80,
-      color: Colors.black87,
+      decoration: BoxDecoration(
+        color: Colors.black87,
+        borderRadius: BorderRadius.circular(40), // Adjust the value as needed
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -109,7 +112,7 @@ class Sidebar extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.share, color: selectedIndex == 5 ? Colors.pink : Colors.white),
-            onPressed: () => onItemTapped(4),
+            onPressed: () => onItemTapped(5),
           ),
         ],
       ),
