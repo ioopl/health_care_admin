@@ -129,7 +129,10 @@ class PatientList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[200],
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(40), // Adjust the value as needed
+      ),
       child: Column(
         children: [
           Padding(
@@ -151,15 +154,22 @@ class PatientList extends StatelessWidget {
               children: List.generate(7, (index) {
                 String patient = 'Patient Name $index';
                 bool isSelected = patient == selectedPatient;
-                return ListTile(
-                  leading: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/profile3.png'), // Patient image
+                return Container(
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.white : Colors.transparent,
+                    borderRadius: BorderRadius.circular(1), // Adjust if needed
                   ),
-                  title: Text(patient),
-                  subtitle: const Text('Manchester City, UK'),
-                  selected: isSelected,
-                  selectedTileColor: Colors.pink[50],
-                  onTap: () => onPatientSelected(patient),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/profile3.png'), // Patient image
+                    ),
+                    title: Text(
+                      patient,
+                      style: TextStyle(color: isSelected ? Colors.black : Colors.black87),
+                    ),
+                    subtitle: const Text('Manchester City, UK'),
+                    onTap: () => onPatientSelected(patient),
+                  ),
                 );
               }),
             ),
@@ -169,6 +179,60 @@ class PatientList extends StatelessWidget {
     );
   }
 }
+
+
+// class PatientList extends StatelessWidget {
+//   final Function(String) onPatientSelected;
+//   final String? selectedPatient;
+//
+//   PatientList({required this.onPatientSelected, required this.selectedPatient});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: Colors.grey[200],
+//         borderRadius: BorderRadius.circular(40), // Adjust the value as needed
+//       ),
+//       child: Column(
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.all(16.0),
+//             child: TextField(
+//               decoration: InputDecoration(
+//                 hintText: 'Search for a patient',
+//                 prefixIcon: Icon(Icons.search),
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(20),
+//                 ),
+//                 filled: true,
+//                 fillColor: Colors.white,
+//               ),
+//             ),
+//           ),
+//           Expanded(
+//             child: ListView(
+//               children: List.generate(7, (index) {
+//                 String patient = 'Patient Name $index';
+//                 bool isSelected = patient == selectedPatient;
+//                 return ListTile(
+//                   leading: const CircleAvatar(
+//                     backgroundImage: AssetImage('assets/images/profile3.png'), // Patient image
+//                   ),
+//                   title: Text(patient),
+//                   subtitle: const Text('Manchester City, UK'),
+//                   selected: isSelected,
+//                   selectedTileColor: Colors.pink[50],
+//                   onTap: () => onPatientSelected(patient),
+//                 );
+//               }),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class PatientDetails extends StatelessWidget {
   final String patient;
