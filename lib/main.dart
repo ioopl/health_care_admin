@@ -36,27 +36,34 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
+      body: Column(
         children: [
-          Sidebar(onItemTapped: _onItemTapped, selectedIndex: _selectedIndex),
+          HeaderLogoView(),
           Expanded(
-            flex: 2,
-            child: _selectedIndex == 2
-                ? PatientList(
-              onPatientSelected: _onPatientSelected,
-              selectedPatient: _selectedPatient,
-            )
-                : _selectedIndex == 0
-                ? DevicesView()
-                : EmptyView(),
-          ),
-          if (_selectedIndex == 2)
-            Expanded(
-              flex: 3,
-              child: _selectedPatient == null
-                  ? const Center(child: Text('Select a patient to see details'))
-                  : PatientDetails(patient: _selectedPatient!),
+            child: Row(
+              children: [
+                Sidebar(onItemTapped: _onItemTapped, selectedIndex: _selectedIndex),
+                Expanded(
+                  flex: 2,
+                  child: _selectedIndex == 2
+                      ? PatientList(
+                    onPatientSelected: _onPatientSelected,
+                    selectedPatient: _selectedPatient,
+                  )
+                      : _selectedIndex == 0
+                      ? DevicesView()
+                      : EmptyView(),
+                ),
+                if (_selectedIndex == 2)
+                  Expanded(
+                    flex: 3,
+                    child: _selectedPatient == null
+                        ? const Center(child: Text('Select a patient to see details'))
+                        : PatientDetails(patient: _selectedPatient!),
+                  ),
+              ],
             ),
+          ),
         ],
       ),
     );
@@ -369,33 +376,32 @@ class Device {
   }
 }
 
-
-import 'package:flutter/material.dart';
-
 class HeaderLogoView extends StatelessWidget {
+  const HeaderLogoView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Image.asset(
-            'assets/logo.png', // Update with your logo image path
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/images/logo.png', // Update with your logo image path
             height: 40,
           ),
-        ),
-        Text(
-          'Patients list',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+          const SizedBox(width: 16),
+          const Text(
+            'Patients list',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
-
 
 
 // Very good code before the DevicesView
