@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(AdminViewApp());
+void main() => runApp(const AdminViewApp());
 
 class AdminViewApp extends StatelessWidget {
+  const AdminViewApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: AdminViewScreen(),
     );
   }
 }
 
 class AdminViewScreen extends StatefulWidget {
+  const AdminViewScreen({super.key});
+
   @override
   _AdminViewScreenState createState() => _AdminViewScreenState();
 }
@@ -38,7 +42,7 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
     return Scaffold(
       body: Column(
         children: [
-          HeaderLogoView(),
+          const HeaderLogoView(),
           Expanded(
             child: Row(
               children: [
@@ -51,8 +55,8 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
                     selectedPatient: _selectedPatient,
                   )
                       : _selectedIndex == 0
-                      ? DevicesView()
-                      : EmptyView(),
+                      ? const DevicesView()
+                      : const EmptyView(),
                 ),
                 if (_selectedIndex == 2)
                   Expanded(
@@ -140,7 +144,7 @@ class PatientList extends StatelessWidget {
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search for a patient',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -180,170 +184,141 @@ class PatientList extends StatelessWidget {
   }
 }
 
-
-// class PatientList extends StatelessWidget {
-//   final Function(String) onPatientSelected;
-//   final String? selectedPatient;
-//
-//   PatientList({required this.onPatientSelected, required this.selectedPatient});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: Colors.grey[200],
-//         borderRadius: BorderRadius.circular(40), // Adjust the value as needed
-//       ),
-//       child: Column(
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.all(16.0),
-//             child: TextField(
-//               decoration: InputDecoration(
-//                 hintText: 'Search for a patient',
-//                 prefixIcon: Icon(Icons.search),
-//                 border: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(20),
-//                 ),
-//                 filled: true,
-//                 fillColor: Colors.white,
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: ListView(
-//               children: List.generate(7, (index) {
-//                 String patient = 'Patient Name $index';
-//                 bool isSelected = patient == selectedPatient;
-//                 return ListTile(
-//                   leading: const CircleAvatar(
-//                     backgroundImage: AssetImage('assets/images/profile3.png'), // Patient image
-//                   ),
-//                   title: Text(patient),
-//                   subtitle: const Text('Manchester City, UK'),
-//                   selected: isSelected,
-//                   selectedTileColor: Colors.pink[50],
-//                   onTap: () => onPatientSelected(patient),
-//                 );
-//               }),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class PatientDetails extends StatelessWidget {
+
   final String patient;
 
-  PatientDetails({required this.patient});
+  const PatientDetails({super.key, required this.patient});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20), // Adjust the radius as needed
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView( // Added SingleChildScrollView here
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/profile.png'), // Detail image
-              ),
-              SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(patient, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text('Manchester City, UK', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  Text('Heart rate', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  Text('72 bpm', style: TextStyle(fontSize: 24)),
-                ],
-              ),
-              Column(
-                children: [
-                  Text('Weight', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  Text('56 kg', style: TextStyle(fontSize: 24)),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  Text('Systolic pressure', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  Text('132 mmHg', style: TextStyle(fontSize: 24)),
-                ],
-              ),
-              Column(
-                children: [
-                  Text('Diastolic pressure', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  Text('88 mmHg', style: TextStyle(fontSize: 24)),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Text('Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          Expanded(
-            child: ListView(
-              children: List.generate(8, (index) {
-                return Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('assets/images/profile.png'), // Patient image
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      Text(patient, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),// Patient Name
+                      const Text('Manchester City, UK', style: TextStyle(fontSize: 15, color: Colors.grey)), // Patient Location
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Text('Heart rate', style: TextStyle(fontSize: 15, color: Colors.grey)), // Heart rate info
+                      Text('72 bpm', style: TextStyle(fontSize: 21)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('Weight', style: TextStyle(fontSize: 15, color: Colors.grey)), // Weight Info
+                      Text('56 kg', style: TextStyle(fontSize: 21)),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Divider(), // Added a divider
+              const SizedBox(height: 20),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Text('Systolic pressure', style: TextStyle(fontSize: 15, color: Colors.grey)), // Systolic pressure info
+                      Text('132 mmHg', style: TextStyle(fontSize: 21)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('Diastolic pressure', style: TextStyle(fontSize: 15, color: Colors.grey)), // Diastolic pressure info
+                      Text('88 mmHg', style: TextStyle(fontSize: 21)),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text('Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), // Events info
+              SizedBox(
+                height: 200, // Provide a fixed height to the ListView
+                child: ListView(
+                  shrinkWrap: true, // Added to ensure ListView does not take infinite height
+                  children: List.generate(8, (index) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.calendar_today),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text('Medication time'),
-                              Text('20 Jul 2024'),
+                              Icon(Icons.calendar_today),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Medication time'),
+                                  Text('20 Jul 2024'),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text('19:56'),
+                              Text('1 x Prozac pill'),
                             ],
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text('19:56'),
-                          Text('1 x Prozac pill'),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ),
+                    );
+                  }),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
+
 class EmptyView extends StatelessWidget {
+  const EmptyView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text(
         'No Content Available',
         style: TextStyle(fontSize: 24, color: Colors.grey, fontWeight: FontWeight.bold),
@@ -353,6 +328,8 @@ class EmptyView extends StatelessWidget {
 }
 
 class DevicesView extends StatefulWidget {
+  const DevicesView({super.key});
+
   @override
   _DevicesViewState createState() => _DevicesViewState();
 }
