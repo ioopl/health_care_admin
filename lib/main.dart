@@ -97,8 +97,8 @@ class Sidebar extends StatelessWidget {
             icon: Icon(Icons.settings, color: selectedIndex == 4 ? Colors.pink : Colors.white),
             onPressed: () => onItemTapped(4),
           ),
-          CircleAvatar(
-            backgroundImage: AssetImage('assets/profile.jpg'), // Profile image
+          const CircleAvatar(
+            backgroundImage: AssetImage('assets/images/profile.png'), // Profile image
           ),
           IconButton(
             icon: Icon(Icons.share, color: selectedIndex == 5 ? Colors.pink : Colors.white),
@@ -142,11 +142,11 @@ class PatientList extends StatelessWidget {
                 String patient = 'Patient Name $index';
                 bool isSelected = patient == selectedPatient;
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: AssetImage('assets/patient.jpg'), // Patient image
+                  leading: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/profile3.png'), // Patient image
                   ),
                   title: Text(patient),
-                  subtitle: Text('Manchester City, UK'),
+                  subtitle: const Text('Manchester City, UK'),
                   selected: isSelected,
                   selectedTileColor: Colors.pink[50],
                   onTap: () => onPatientSelected(patient),
@@ -174,9 +174,9 @@ class PatientDetails extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/patient_detail.jpg'), // Detail image
+                backgroundImage: AssetImage('assets/images/profile.png'), // Detail image
               ),
               SizedBox(width: 20),
               Column(
@@ -266,55 +266,6 @@ class PatientDetails extends StatelessWidget {
   }
 }
 
-class DevicesView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        children: List.generate(4, (index) {
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/device.jpg', // Device image
-                    height: 80,
-                  ),
-                  Text(
-                    'Device ${index + 1}',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Connected',
-                    style: TextStyle(fontSize: 16, color: Colors.green),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(),
-                    ),
-                    child: Text('Disconnect'),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}
-
 class EmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -326,6 +277,125 @@ class EmptyView extends StatelessWidget {
     );
   }
 }
+
+class DevicesView extends StatefulWidget {
+  @override
+  _DevicesViewState createState() => _DevicesViewState();
+}
+
+class _DevicesViewState extends State<DevicesView> {
+  final List<Device> devices = [
+    Device(name: 'Alexa 1', status: 'Connected', imageUrl: 'assets/images/alexa.webp', chargeStatus: '75%'),
+    Device(name: 'Ring', status: 'Connected', imageUrl: 'assets/images/ring.jpeg', chargeStatus: '11%'),
+    Device(name: 'Fitbit', status: 'Connected', imageUrl: 'assets/images/fitbit.webp', chargeStatus: '15%'),
+    Device(name: 'Navbar Device', status: 'Connected', imageUrl: 'assets/images/navbar.jpg', chargeStatus: '99%'),
+  ];
+
+
+  void toggleConnection(int index) {
+    setState(() {
+      devices[index].toggleConnection();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: devices.length,
+        itemBuilder: (context, index) {
+          final device = devices[index];
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    device.imageUrl, // Device image
+                    height: 101,
+                  ),
+                  Text(
+                    device.name,
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    device.chargeStatus,
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.normal, color: Colors.grey),
+                  ),
+                  Text(
+                    device.status,
+                    style: TextStyle(fontSize: 15, color: device.status == 'Connected' ? Colors.green : Colors.red),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      toggleConnection(index);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Text(device.status == 'Connected' ? 'Disconnect' : 'Connect'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class Device {
+  final String name;
+  final String chargeStatus;
+  final String imageUrl;
+  String status;
+
+  Device({required this.name, required this.chargeStatus, required this.status, required this.imageUrl});
+
+  void toggleConnection() {
+    status = (status == 'Connected') ? 'Disconnected' : 'Connected';
+  }
+}
+
+
+import 'package:flutter/material.dart';
+
+class HeaderLogoView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Image.asset(
+            'assets/logo.png', // Update with your logo image path
+            height: 40,
+          ),
+        ),
+        Text(
+          'Patients list',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
 
 // Very good code before the DevicesView
