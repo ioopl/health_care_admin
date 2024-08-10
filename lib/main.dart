@@ -39,6 +39,34 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget content;
+    switch (_selectedIndex) {
+      case 0:
+        content = const DevicesView();
+        break;
+      case 2:
+        content = Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: PatientList(
+                onPatientSelected: _onPatientSelected,
+                selectedPatient: _selectedPatient,
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: _selectedPatient == null
+                  ? const Center(child: Text('Select a patient to see details'))
+                  : PatientDetails(patient: _selectedPatient!),
+            ),
+          ],
+        );
+        break;
+      default:
+        content = const EmptyView();
+    }
+
     return Scaffold(
       body: Column(
         children: [
@@ -47,24 +75,7 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
             child: Row(
               children: [
                 Sidebar(onItemTapped: _onItemTapped, selectedIndex: _selectedIndex),
-                Expanded(
-                  flex: 2,
-                  child: _selectedIndex == 2
-                      ? PatientList(
-                    onPatientSelected: _onPatientSelected,
-                    selectedPatient: _selectedPatient,
-                  )
-                      : _selectedIndex == 0
-                      ? const DevicesView()
-                      : const EmptyView(),
-                ),
-                if (_selectedIndex == 2)
-                  Expanded(
-                    flex: 3,
-                    child: _selectedPatient == null
-                        ? const Center(child: Text('Select a patient to see details'))
-                        : PatientDetails(patient: _selectedPatient!),
-                  ),
+                Expanded(flex: 2, child: content),
               ],
             ),
           ),
@@ -72,6 +83,42 @@ class _AdminViewScreenState extends State<AdminViewScreen> {
       ),
     );
   }
+
+// @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body: Column(
+  //       children: [
+  //         const HeaderLogoView(),
+  //         Expanded(
+  //           child: Row(
+  //             children: [
+  //               Sidebar(onItemTapped: _onItemTapped, selectedIndex: _selectedIndex),
+  //               Expanded(
+  //                 flex: 2,
+  //                 child: _selectedIndex == 2
+  //                     ? PatientList(
+  //                   onPatientSelected: _onPatientSelected,
+  //                   selectedPatient: _selectedPatient,
+  //                 )
+  //                     : _selectedIndex == 0
+  //                     ? const DevicesView()
+  //                     : const EmptyView(),
+  //               ),
+  //               if (_selectedIndex == 2)
+  //                 Expanded(
+  //                   flex: 3,
+  //                   child: _selectedPatient == null
+  //                       ? const Center(child: Text('Select a patient to see details'))
+  //                       : PatientDetails(patient: _selectedPatient!),
+  //                 ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 class Sidebar extends StatelessWidget {
