@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'DeviceDetailsView.dart';
 
@@ -15,19 +16,73 @@ class _DevicesViewState extends State<DevicesView> {
   @override
   void initState() {
     super.initState();
-    fetchBluetoothDevices();
+    requestPermissions().then((_) {
+      fetchBluetoothDevices();
+    });
   }
 
+  Future<void> requestPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetooth,
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.location,
+    ].request();
+
+    if (statuses[Permission.bluetoothScan]!.isGranted &&
+        statuses[Permission.location]!.isGranted) {
+      fetchBluetoothDevices();
+    } else {
+      // Handle the case where permissions are not granted
+      showError();
+    }
+  }
+
+  void showError() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Bluetooth Permissions required"),
+        content: const Text("Bluetooth and location permissions are needed to scan for devices.\n Bluetooth services might be turned Off or A scan is already in progress.."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // void requestLocationPermission() async {
+  //   PermissionStatus status = await Permission.location.request();
+  //   if (status.isGranted) {
+  //     // Proceed with Bluetooth scanning
+  //     fetchBluetoothDevices();
+  //   } else if (status.isDenied) {
+  //     // Permission denied, handle accordingly
+  //   } else if (status.isPermanentlyDenied) {
+  //     // Open app settings to allow user to enable the permission
+  //     openAppSettings();
+  //   }
+  // }
+
   void fetchBluetoothDevices() async {
-    flutterBlue.startScan(timeout: Duration(seconds: 5));
+    bool isScanning = await flutterBlue.isScanning.first;
 
-    flutterBlue.scanResults.listen((results) {
-      setState(() {
-        devices = results.map((result) => result.device).toList();
+    if (!isScanning) {
+      flutterBlue.startScan(timeout: const Duration(seconds: 5));
+
+      flutterBlue.scanResults.listen((results) {
+        setState(() {
+          devices = results.map((result) => result.device).toList();
+        });
       });
-    });
 
-    flutterBlue.stopScan();
+      flutterBlue.stopScan();
+    } else {
+      showError();
+    }
   }
 
   void _showDeviceDetails(BluetoothDevice device) {
@@ -54,34 +109,3 @@ class _DevicesViewState extends State<DevicesView> {
   }
 }
 
-// class DeviceDetailsView extends StatelessWidget {
-//   final BluetoothDevice device;
-//
-//   DeviceDetailsView({required this.device});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(device.name.isEmpty ? 'Unknown Device' : device.name),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text('Device ID: ${device.id}', style: TextStyle(fontSize: 18)),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () {
-//                 // Implement connection logic here
-//               },
-//               child: Text('Connect to Device'),
-//             ),
-//             // Add more buttons or information as needed
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

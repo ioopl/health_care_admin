@@ -15,9 +15,10 @@ class _DeviceDetailsViewState extends State<DeviceDetailsView> {
   bool _isConnected = false;
 
   @override
-  void initState() {
-    super.initState();
-    _connectToDevice();
+  void dispose() {
+    widget.device.disconnect();
+    print('Device disconnected');
+    super.dispose();
   }
 
   Future<void> _connectToDevice() async {
@@ -34,6 +35,31 @@ class _DeviceDetailsViewState extends State<DeviceDetailsView> {
     }
   }
 
+  // StreamSubscription? _scanSubscription;
+  // StreamSubscription? _deviceConnection;
+  // StreamSubscription? _characteristicSubscription;
+  // BluetoothDevice? _connectedDevice;
+  //
+  // Future<void> _connectToDevice2() async {
+  //   try {
+  //     await widget.device.connect();
+  //     _connectedDevice = widget.device;
+  //     _deviceConnection = widget.device.state.listen((state) {
+  //       print('Connection state: $state');
+  //       if (state == BluetoothDeviceState.connected) {
+  //         _discoverServices();
+  //       } else if (state == BluetoothDeviceState.disconnected) {
+  //         print('Device disconnected');
+  //       }
+  //     });
+  //     await _scanSubscription?.cancel();
+  //     _scanSubscription = null;
+  //   } catch (e) {
+  //     print('Error connecting: $e');
+  //     rethrow;
+  //   }
+  // }
+
   Future<void> _discoverServices() async {
     List<BluetoothService> services = await widget.device.discoverServices();
     setState(() {
@@ -42,18 +68,25 @@ class _DeviceDetailsViewState extends State<DeviceDetailsView> {
   }
 
   @override
-  void dispose() {
-    widget.device.disconnect();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.device.name.isEmpty ? 'Unknown Device' : widget.device.name),
       ),
-      body: _isConnected ? _buildServiceList() : Center(child: CircularProgressIndicator()),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: _connectToDevice,
+              child: Text(_isConnected ? 'Connected' : 'Connect to Device'),
+            ),
+          ),
+          Expanded(
+            child: _isConnected ? _buildServiceList() : const Center(child: Text('Press the button to connect')),
+          ),
+        ],
+      ),
     );
   }
 
