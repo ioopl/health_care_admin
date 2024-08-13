@@ -105,7 +105,7 @@ class Sidebar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            icon: Icon(Icons.grid_view, color: selectedIndex == 0 ? Colors.pink : Colors.white),
+            icon: Icon(Icons.bluetooth, color: selectedIndex == 0 ? Colors.pink : Colors.white),
             onPressed: () => onItemTapped(0),
           ),
           // IconButton(
@@ -113,7 +113,7 @@ class Sidebar extends StatelessWidget {
           //   onPressed: () => onItemTapped(1),
           // ),
           IconButton(
-            icon: Icon(Icons.bar_chart, color: selectedIndex == 2 ? Colors.pink : Colors.white),
+            icon: Icon(Icons.wifi, color: selectedIndex == 2 ? Colors.pink : Colors.white),
             onPressed: () => onItemTapped(2),
           ),
           // IconButton(
@@ -156,7 +156,7 @@ class PatientList extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search for a patient',
+                hintText: 'Search for a WIFI device',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
