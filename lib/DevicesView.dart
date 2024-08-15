@@ -5,6 +5,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'DeviceDetailsView.dart';
 
 class DevicesView extends StatefulWidget {
+  const DevicesView({super.key});
+
   @override
   _DevicesViewState createState() => _DevicesViewState();
 }
@@ -38,22 +40,6 @@ class _DevicesViewState extends State<DevicesView> {
     }
   }
 
-  void showError() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Bluetooth Permissions required"),
-        content: const Text("Bluetooth and location permissions are needed to scan for devices.\n Bluetooth services might be turned Off or A scan is already in progress.."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"),
-          ),
-        ],
-      ),
-    );
-  }
-
   // void requestLocationPermission() async {
   //   PermissionStatus status = await Permission.location.request();
   //   if (status.isGranted) {
@@ -66,6 +52,24 @@ class _DevicesViewState extends State<DevicesView> {
   //     openAppSettings();
   //   }
   // }
+
+  void showError() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Bluetooth Permissions required"),
+        content: const Text("Bluetooth and location permissions are needed to scan for devices.\n "
+            "Bluetooth services might be turned Off\n"
+            "or A scan is already in progress..."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
 
   void fetchBluetoothDevices() async {
     bool isScanning = await flutterBlue.isScanning.first;
@@ -81,7 +85,7 @@ class _DevicesViewState extends State<DevicesView> {
 
       flutterBlue.stopScan();
     } else {
-      showError();
+      // handle
     }
   }
 
