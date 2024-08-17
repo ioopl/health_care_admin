@@ -57,10 +57,11 @@ class _DevicesViewState extends State<DevicesView> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Bluetooth Permissions required"),
-        content: const Text("Bluetooth and location permissions are needed to scan for devices.\n "
-            "Bluetooth services might be turned Off\n"
-            "or A scan is already in progress..."),
+        title: const Text("Bluetooth\n\n"),
+        content: const Text("Bluetooth and location permissions are needed to scan for devices.\n\n"
+            "\nBluetooth services might be turned Off\n\n"
+            "\n or A scan is already in progress.\n\n\n"
+            "\n Please wait.\n\n\n"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

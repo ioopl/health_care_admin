@@ -35,31 +35,6 @@ class _DeviceDetailsViewState extends State<DeviceDetailsView> {
     }
   }
 
-  // StreamSubscription? _scanSubscription;
-  // StreamSubscription? _deviceConnection;
-  // StreamSubscription? _characteristicSubscription;
-  // BluetoothDevice? _connectedDevice;
-  //
-  // Future<void> _connectToDevice2() async {
-  //   try {
-  //     await widget.device.connect();
-  //     _connectedDevice = widget.device;
-  //     _deviceConnection = widget.device.state.listen((state) {
-  //       print('Connection state: $state');
-  //       if (state == BluetoothDeviceState.connected) {
-  //         _discoverServices();
-  //       } else if (state == BluetoothDeviceState.disconnected) {
-  //         print('Device disconnected');
-  //       }
-  //     });
-  //     await _scanSubscription?.cancel();
-  //     _scanSubscription = null;
-  //   } catch (e) {
-  //     print('Error connecting: $e');
-  //     rethrow;
-  //   }
-  // }
-
   Future<void> _discoverServices() async {
     List<BluetoothService> services = await widget.device.discoverServices();
     setState(() {
@@ -95,11 +70,15 @@ class _DeviceDetailsViewState extends State<DeviceDetailsView> {
       itemCount: _services.length,
       itemBuilder: (context, index) {
         return ExpansionTile(
-          title: Text('Service: ${_services[index].uuid}'),
+          title: Text('Service: ${getServiceName(_services[index].uuid.toString())} (${_services[index].uuid})'),
           children: _services[index].characteristics.map((characteristic) {
             return ListTile(
               title: Text('Characteristic: ${characteristic.uuid}'),
-              subtitle: Text('Properties: ${characteristic.properties}'),
+              subtitle: Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: _buildPropertyBubbles(characteristic.properties),
+              ),
               onTap: () async {
                 var value = await characteristic.read();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -112,4 +91,102 @@ class _DeviceDetailsViewState extends State<DeviceDetailsView> {
       },
     );
   }
+
+  List<Widget> _buildPropertyBubbles(CharacteristicProperties properties) {
+    List<Widget> bubbles = [];
+
+    if (properties.read != null) {
+      bubbles.add(_buildPropertyBubble('Read', properties.read));
+    }
+    if (properties.write != null) {
+      bubbles.add(_buildPropertyBubble('Write', properties.write));
+    }
+    if (properties.notify != null) {
+      bubbles.add(_buildPropertyBubble('Notify', properties.notify));
+    }
+    if (properties.indicate != null) {
+      bubbles.add(_buildPropertyBubble('Indicate', properties.indicate));
+    }
+    // Add more properties as needed
+
+    return bubbles;
+  }
+
+  Widget _buildPropertyBubble(String label, bool value) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      decoration: BoxDecoration(
+        color: value ? Colors.green : Colors.red,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(color: Colors.white, fontSize: 14),
+      ),
+    );
+  }
+
+  Map<String, String> serviceNames = {
+    "00001800-0000-1000-8000-00805f9b34fb": "Generic Access",
+    "00001801-0000-1000-8000-00805f9b34fb": "Generic Attribute",
+    "0000180d-0000-1000-8000-00805f9b34fb": "Heart Rate",
+    "0000180f-0000-1000-8000-00805f9b34fb": "Battery Service",
+  };
+
+  String getServiceName(String uuid) {
+    return serviceNames[uuid] ?? "Unknown Service";
+  }
+
+  // With Rounded small circle bubbles
+  // List<Widget> _buildPropertyWidgets(CharacteristicProperties properties) {
+  // print('properties : $properties');
+  // debugPrint(properties.toString());
+  //
+  //   List<Widget> widgets = [];
+  //
+  //   if (properties.read == true) {
+  //     widgets.add(_buildPropertyCircle('Read', Colors.blue));
+  //   }
+  //   if (properties.write) {
+  //     widgets.add(_buildPropertyCircle('Write', Colors.green));
+  //   }
+  //   if (properties.notify) {
+  //     widgets.add(_buildPropertyCircle('Notify', Colors.red));
+  //   }
+  //   if (properties.indicate) {
+  //     widgets.add(_buildPropertyCircle('Indicate', Colors.orange));
+  //   }
+  //   if (properties.broadcast) {
+  //     widgets.add(_buildPropertyCircle('Broadcast', Colors.yellow));
+  //   }
+  //   if (properties.writeWithoutResponse) {
+  //     widgets.add(_buildPropertyCircle('Write Without Response', Colors.black));
+  //   }
+  //   if (properties.extendedProperties) {
+  //     widgets.add(_buildPropertyCircle('Extended Properties', Colors.purple));
+  //   }
+  //   if (properties.authenticatedSignedWrites) {
+  //     widgets.add(_buildPropertyCircle('Authenticated Signed Writes', Colors.grey));
+  //   }
+  //
+  //   return widgets;
+  // }
+  //
+  // Widget _buildPropertyCircle(String label, Color color) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(horizontal: 5),
+  //     padding: EdgeInsets.all(8),
+  //     decoration: BoxDecoration(
+  //       color: color,
+  //       shape: BoxShape.circle,
+  //     ),
+  //     child: Center(
+  //       child: Text(
+  //         label,
+  //         style: TextStyle(color: Colors.white, fontSize: 12),
+  //       ),
+  //     ),
+  //   );
+  // }
+
 }
